@@ -39,7 +39,6 @@ public class SocketWindowWordCount {
         // parse the data, group it, window it, and aggregate the counts
         DataStream<WordWithCount> windowCounts = text
                 .flatMap(new FlatMapFunction<String, WordWithCount>() {
-                    @Override
                     public void flatMap(String value, Collector<WordWithCount> out) {
                         for (String word : value.split("\\s")) {
                             out.collect(new WordWithCount(word, 1L));
@@ -49,7 +48,6 @@ public class SocketWindowWordCount {
                 .keyBy("word")
                 .timeWindow(Time.seconds(5))
                 .reduce(new ReduceFunction<WordWithCount>() {
-                    @Override
                     public WordWithCount reduce(WordWithCount a, WordWithCount b) {
                         return new WordWithCount(a.word, a.count + b.count);
                     }
